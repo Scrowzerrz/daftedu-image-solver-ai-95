@@ -19,17 +19,17 @@ export function Hero() {
             <span className="font-bold text-3xl ml-2 text-gradient">daftedu</span>
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-            <span className="text-gradient">Solve Any Math Problem</span> With AI
+            <span className="text-gradient">Resolva Qualquer Problema de Matemática</span> Com IA
           </h1>
           <p className="text-xl text-slate-600 dark:text-slate-400 mb-10 max-w-3xl mx-auto">
-            Snap a photo of any math or engineering problem and get instant solutions with detailed explanations powered by advanced AI. Perfect for equations, circuits, geometry, and more.
+            Tire uma foto de qualquer problema de matemática ou engenharia e obtenha soluções instantâneas com explicações detalhadas alimentadas por IA avançada. Perfeito para equações, circuitos, geometria e muito mais.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
             <Button size="lg" className="gradient-bg text-lg px-8 h-14" onClick={() => navigate('/signup')}>
-              Get Started — It's Free
+              Começar — É Grátis
             </Button>
             <Button size="lg" variant="outline" className="text-lg px-8 h-14" onClick={() => navigate('/pricing')}>
-              View Pricing
+              Ver Preços
             </Button>
           </div>
           
@@ -38,22 +38,22 @@ export function Hero() {
               <div className="h-12 w-12 bg-daft-100 dark:bg-daft-900 rounded-lg flex items-center justify-center mb-4">
                 <Zap className="h-6 w-6 text-daft-600" />
               </div>
-              <h3 className="text-xl font-medium mb-2">Instant Solutions</h3>
-              <p className="text-slate-500 dark:text-slate-400">Upload an image and get detailed explanations in seconds</p>
+              <h3 className="text-xl font-medium mb-2">Soluções Instantâneas</h3>
+              <p className="text-slate-500 dark:text-slate-400">Envie uma imagem e receba explicações detalhadas em segundos</p>
             </div>
             <div className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-md border border-slate-200 dark:border-slate-800 flex flex-col items-center text-center">
               <div className="h-12 w-12 bg-daft-100 dark:bg-daft-900 rounded-lg flex items-center justify-center mb-4">
                 <Calculator className="h-6 w-6 text-daft-600" />
               </div>
-              <h3 className="text-xl font-medium mb-2">Step-by-Step Workings</h3>
-              <p className="text-slate-500 dark:text-slate-400">Understand the solution process with clear step-by-step explanations</p>
+              <h3 className="text-xl font-medium mb-2">Resolução Passo a Passo</h3>
+              <p className="text-slate-500 dark:text-slate-400">Entenda o processo de solução com explicações claras e detalhadas</p>
             </div>
             <div className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-md border border-slate-200 dark:border-slate-800 flex flex-col items-center text-center">
               <div className="h-12 w-12 bg-daft-100 dark:bg-daft-900 rounded-lg flex items-center justify-center mb-4">
                 <BookOpen className="h-6 w-6 text-daft-600" />
               </div>
-              <h3 className="text-xl font-medium mb-2">Wide Knowledge</h3>
-              <p className="text-slate-500 dark:text-slate-400">From basic algebra to advanced engineering concepts</p>
+              <h3 className="text-xl font-medium mb-2">Amplo Conhecimento</h3>
+              <p className="text-slate-500 dark:text-slate-400">Da álgebra básica aos conceitos avançados de engenharia</p>
             </div>
           </div>
         </div>

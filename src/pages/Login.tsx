@@ -37,9 +37,9 @@ const Login = () => {
               <FileImage className="h-8 w-8 text-daft-600" />
               <span className="font-bold text-2xl ml-2 text-gradient">daftedu</span>
             </div>
-            <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
+            <CardTitle className="text-2xl font-bold">Bem-vindo de volta</CardTitle>
             <CardDescription>
-              Enter your credentials to access your account
+              Digite suas credenciais para acessar sua conta
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit}>
@@ -51,7 +51,7 @@ const Login = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="name@example.com"
+                  placeholder="nome@exemplo.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -60,13 +60,13 @@ const Login = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium" htmlFor="password">
-                    Password
+                    Senha
                   </label>
                   <Link
                     to="/forgot-password"
                     className="text-sm text-daft-600 hover:text-daft-700"
                   >
-                    Forgot password?
+                    Esqueceu a senha?
                   </Link>
                 </div>
                 <Input
@@ -88,12 +88,12 @@ const Login = () => {
                 {isLoading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}
-                Sign In
+                Entrar
               </Button>
               <div className="text-center text-sm">
-                Don't have an account?{" "}
+                Não tem uma conta?{" "}
                 <Link to="/signup" className="text-daft-600 hover:text-daft-700 font-medium">
-                  Sign Up
+                  Cadastre-se
                 </Link>
               </div>
             </CardFooter>

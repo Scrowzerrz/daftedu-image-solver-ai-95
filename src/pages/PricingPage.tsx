@@ -11,10 +11,10 @@ const PricingPage = () => {
         <div className="bg-gradient-to-b from-white to-slate-50 dark:from-slate-950 dark:to-slate-900 py-20">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="text-gradient">Simple Pricing</span> for Everyone
+              <span className="text-gradient">Preços Simples</span> para Todos
             </h1>
             <p className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-              Choose the plan that works for your needs. Get started for free or upgrade for more features.
+              Escolha o plano que funciona para suas necessidades. Comece gratuitamente ou faça upgrade para mais recursos.
             </p>
           </div>
         </div>

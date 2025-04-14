@@ -11,33 +11,33 @@ interface Testimonial {
 export function Testimonials() {
   const testimonials: Testimonial[] = [
     {
-      content: "daftedu has completely changed how I study for my electrical engineering classes. Just upload a circuit diagram and it explains everything!",
+      content: "O daftedu mudou completamente a forma como estudo para minhas aulas de engenharia elétrica. Basta enviar um diagrama de circuito e ele explica tudo!",
       author: "Alex Chen",
-      role: "Electrical Engineering Student",
+      role: "Estudante de Engenharia Elétrica",
       size: "lg"
     },
     {
-      content: "As a math teacher, I recommend daftedu to all my students who need extra help. The step-by-step explanations are incredibly detailed.",
+      content: "Como professor de matemática, recomendo o daftedu para todos os meus alunos que precisam de ajuda extra. As explicações passo a passo são incrivelmente detalhadas.",
       author: "Sarah Johnson",
-      role: "High School Math Teacher",
+      role: "Professora de Matemática do Ensino Médio",
       size: "sm"
     },
     {
-      content: "I was struggling with calculus until I found daftedu. Now I can understand the solutions and learn from them.",
+      content: "Eu estava com dificuldades em cálculo até encontrar o daftedu. Agora consigo entender as soluções e aprender com elas.",
       author: "Michael Rodriguez",
-      role: "College Freshman",
+      role: "Calouro Universitário",
       size: "md"
     },
     {
-      content: "The accuracy of the solutions is impressive. It's like having a personal tutor available 24/7.",
+      content: "A precisão das soluções é impressionante. É como ter um tutor pessoal disponível 24 horas por dia, 7 dias por semana.",
       author: "Emma Williams",
-      role: "Physics Graduate Student",
+      role: "Estudante de Pós-Graduação em Física",
       size: "sm"
     },
     {
-      content: "As a working professional going back to school, daftedu has been a lifesaver for refreshing my math skills.",
+      content: "Como profissional que está voltando aos estudos, o daftedu tem sido essencial para revisar minhas habilidades matemáticas.",
       author: "David Thompson",
-      role: "Part-time Engineering Student",
+      role: "Estudante de Engenharia em Meio Período",
       size: "md"
     }
   ];
@@ -47,10 +47,10 @@ export function Testimonials() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            <span className="text-gradient">Trusted by Students</span> and Professionals
+            <span className="text-gradient">Confiado por Estudantes</span> e Profissionais
           </h2>
           <p className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-            See what our users are saying about their experience with daftedu
+            Veja o que nossos usuários estão dizendo sobre sua experiência com o daftedu
           </p>
         </div>
         

@@ -14,17 +14,17 @@ export function CTA() {
           
           <div className="relative z-10 md:max-w-2xl">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Ready to solve your toughest math problems?
+              Pronto para resolver seus problemas matemáticos mais difíceis?
             </h2>
             <p className="text-white text-opacity-80 text-lg mb-8">
-              Join thousands of students and professionals who are using daftedu to solve complex problems, understand difficult concepts, and improve their grades.
+              Junte-se a milhares de estudantes e profissionais que estão usando o daftedu para resolver problemas complexos, entender conceitos difíceis e melhorar suas notas.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="bg-white text-daft-600 hover:bg-slate-100" onClick={() => navigate('/signup')}>
-                Get Started for Free
+                Comece Gratuitamente
               </Button>
               <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10" onClick={() => navigate('/pricing')}>
-                View Pricing <ArrowRight className="ml-2 h-4 w-4" />
+                Ver Preços <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </div>

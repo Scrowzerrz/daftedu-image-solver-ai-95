@@ -38,20 +38,20 @@ const Signup = () => {
               <FileImage className="h-8 w-8 text-daft-600" />
               <span className="font-bold text-2xl ml-2 text-gradient">daftedu</span>
             </div>
-            <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
+            <CardTitle className="text-2xl font-bold">Crie sua conta</CardTitle>
             <CardDescription>
-              Start solving math problems with AI
+              Comece a resolver problemas de matemática com IA
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium" htmlFor="name">
-                  Name
+                  Nome
                 </label>
                 <Input
                   id="name"
-                  placeholder="John Doe"
+                  placeholder="João Silva"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -64,7 +64,7 @@ const Signup = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="name@example.com"
+                  placeholder="nome@exemplo.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -72,7 +72,7 @@ const Signup = () => {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium" htmlFor="password">
-                  Password
+                  Senha
                 </label>
                 <Input
                   id="password"
@@ -84,13 +84,13 @@ const Signup = () => {
                 />
               </div>
               <div className="text-sm text-slate-500">
-                By signing up, you agree to our{" "}
+                Ao se cadastrar, você concorda com nossos{" "}
                 <Link to="/terms" className="text-daft-600 hover:text-daft-700">
-                  Terms of Service
+                  Termos de Serviço
                 </Link>{" "}
-                and{" "}
+                e{" "}
                 <Link to="/privacy" className="text-daft-600 hover:text-daft-700">
-                  Privacy Policy
+                  Política de Privacidade
                 </Link>
                 .
               </div>
@@ -104,12 +104,12 @@ const Signup = () => {
                 {isLoading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}
-                Sign Up
+                Cadastrar
               </Button>
               <div className="text-center text-sm">
-                Already have an account?{" "}
+                Já tem uma conta?{" "}
                 <Link to="/login" className="text-daft-600 hover:text-daft-700 font-medium">
-                  Sign In
+                  Entrar
                 </Link>
               </div>
             </CardFooter>

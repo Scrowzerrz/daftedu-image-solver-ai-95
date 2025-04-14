@@ -13,48 +13,48 @@ export function Pricing() {
   
   const plans = [
     {
-      name: "Free",
-      description: "Perfect for trying out and occasional use",
-      price: { monthly: "$0", annually: "$0" },
+      name: "Gratuito",
+      description: "Perfeito para experimentar e uso ocasional",
+      price: { monthly: "R$0", annually: "R$0" },
       features: [
-        "5 image uploads per day",
-        "Basic step-by-step solutions",
-        "Limited subjects covered",
-        "24-hour history"
+        "5 uploads de imagens por dia",
+        "Soluções básicas passo a passo",
+        "Disciplinas limitadas",
+        "Histórico de 24 horas"
       ],
-      cta: "Get Started",
+      cta: "Começar Agora",
       featured: false
     },
     {
       name: "Pro",
-      description: "Everything you need for regular academic use",
-      price: { monthly: "$9.99", annually: "$7.99" },
+      description: "Tudo que você precisa para uso acadêmico regular",
+      price: { monthly: "R$49,90", annually: "R$39,90" },
       features: [
-        "50 image uploads per day",
-        "Full step-by-step solutions",
-        "All subjects covered",
-        "30-day history",
-        "Priority processing",
-        "Download solutions as PDF"
+        "50 uploads de imagens por dia",
+        "Soluções completas passo a passo",
+        "Todas as disciplinas cobertas",
+        "Histórico de 30 dias",
+        "Processamento prioritário",
+        "Download de soluções em PDF"
       ],
-      cta: "Start 7-Day Trial",
+      cta: "Teste Gratuito de 7 Dias",
       featured: true
     },
     {
       name: "Premium",
-      description: "Advanced features for professionals and educators",
-      price: { monthly: "$19.99", annually: "$15.99" },
+      description: "Recursos avançados para profissionais e educadores",
+      price: { monthly: "R$99,90", annually: "R$79,90" },
       features: [
-        "Unlimited image uploads",
-        "Enhanced solution depth",
-        "All subjects with specialized focus",
-        "Unlimited history",
-        "Instant processing",
-        "Export to all formats",
-        "Team sharing features",
-        "API access"
+        "Uploads ilimitados de imagens",
+        "Maior profundidade nas soluções",
+        "Todas as disciplinas com foco especializado",
+        "Histórico ilimitado",
+        "Processamento instantâneo",
+        "Exportação para todos os formatos",
+        "Recursos de compartilhamento em equipe",
+        "Acesso à API"
       ],
-      cta: "Contact Sales",
+      cta: "Fale com Vendas",
       featured: false
     }
   ];
@@ -64,10 +64,10 @@ export function Pricing() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            <span className="text-gradient">Simple Pricing</span> for Everyone
+            <span className="text-gradient">Preços Simples</span> para Todos
           </h2>
           <p className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-            Choose the perfect plan that fits your needs. All plans include core features.
+            Escolha o plano perfeito para suas necessidades. Todos os planos incluem recursos principais.
           </p>
           
           <div className="flex items-center justify-center mt-8">
@@ -81,7 +81,7 @@ export function Pricing() {
                 )}
                 onClick={() => setBillingPeriod("monthly")}
               >
-                Monthly
+                Mensal
               </button>
               <button
                 className={cn(
@@ -92,7 +92,7 @@ export function Pricing() {
                 )}
                 onClick={() => setBillingPeriod("annually")}
               >
-                Annually <span className="text-daft-600 font-medium">Save 20%</span>
+                Anual <span className="text-daft-600 font-medium">Economize 20%</span>
               </button>
             </div>
           </div>
@@ -111,7 +111,7 @@ export function Pricing() {
             >
               {plan.featured && (
                 <div className="bg-daft-500 text-white text-center py-2 text-sm font-medium">
-                  MOST POPULAR
+                  MAIS POPULAR
                 </div>
               )}
               <div className="p-8">
@@ -119,8 +119,8 @@ export function Pricing() {
                 <p className="text-slate-500 dark:text-slate-400 mt-2">{plan.description}</p>
                 <div className="mt-6">
                   <span className="text-4xl font-bold">{plan.price[billingPeriod]}</span>
-                  {plan.name !== "Free" && (
-                    <span className="text-slate-500 dark:text-slate-400">/month</span>
+                  {plan.name !== "Gratuito" && (
+                    <span className="text-slate-500 dark:text-slate-400">/mês</span>
                   )}
                 </div>
                 <div className="mt-8">
@@ -135,7 +135,7 @@ export function Pricing() {
                   </Button>
                 </div>
                 <div className="mt-8">
-                  <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">What's included:</p>
+                  <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">O que está incluído:</p>
                   <ul className="space-y-3">
                     {plan.features.map((feature) => (
                       <li key={feature} className="flex items-start">
@@ -151,12 +151,12 @@ export function Pricing() {
         </div>
         
         <div className="mt-16 text-center bg-slate-50 dark:bg-slate-900 rounded-xl p-8 max-w-3xl mx-auto">
-          <h3 className="text-2xl font-bold mb-4">Need a custom solution?</h3>
+          <h3 className="text-2xl font-bold mb-4">Precisa de uma solução personalizada?</h3>
           <p className="text-slate-600 dark:text-slate-400 mb-6">
-            We offer custom plans for schools, universities, and enterprises with specialized requirements.
+            Oferecemos planos personalizados para escolas, universidades e empresas com requisitos específicos.
           </p>
           <Button variant="outline" size="lg" onClick={() => navigate('/contact')}>
-            Contact our Sales Team
+            Entre em contato com nossa equipe de vendas
           </Button>
         </div>
       </div>

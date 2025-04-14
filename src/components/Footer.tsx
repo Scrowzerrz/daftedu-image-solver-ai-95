@@ -16,33 +16,33 @@ export function Footer() {
               <span className="font-bold text-xl ml-2 text-gradient">daftedu</span>
             </div>
             <p className="text-slate-500 dark:text-slate-400">
-              Advanced AI-powered solutions for math and engineering problems
+              Soluções avançadas com IA para problemas de matemática e engenharia
             </p>
           </div>
           
           <div>
-            <h3 className="font-semibold text-lg mb-4">Product</h3>
+            <h3 className="font-semibold text-lg mb-4">Produto</h3>
             <ul className="space-y-3">
-              <li><a href="/features" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400 transition">Features</a></li>
-              <li><a href="/pricing" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400 transition">Pricing</a></li>
+              <li><a href="/features" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400 transition">Recursos</a></li>
+              <li><a href="/pricing" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400 transition">Preços</a></li>
               <li><a href="/roadmap" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400 transition">Roadmap</a></li>
             </ul>
           </div>
           
           <div>
-            <h3 className="font-semibold text-lg mb-4">Company</h3>
+            <h3 className="font-semibold text-lg mb-4">Empresa</h3>
             <ul className="space-y-3">
-              <li><a href="/about" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400 transition">About</a></li>
-              <li><a href="/team" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400 transition">Team</a></li>
-              <li><a href="/contact" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400 transition">Contact</a></li>
+              <li><a href="/about" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400 transition">Sobre</a></li>
+              <li><a href="/team" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400 transition">Equipe</a></li>
+              <li><a href="/contact" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400 transition">Contato</a></li>
             </ul>
           </div>
           
           <div>
             <h3 className="font-semibold text-lg mb-4">Legal</h3>
             <ul className="space-y-3">
-              <li><a href="/terms" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400 transition">Terms</a></li>
-              <li><a href="/privacy" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400 transition">Privacy</a></li>
+              <li><a href="/terms" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400 transition">Termos</a></li>
+              <li><a href="/privacy" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400 transition">Privacidade</a></li>
               <li><a href="/cookies" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400 transition">Cookies</a></li>
             </ul>
           </div>
@@ -50,7 +50,7 @@ export function Footer() {
         
         <div className="mt-12 pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center">
           <p className="text-slate-500 dark:text-slate-400 text-sm mb-4 md:mb-0">
-            © {year} daftedu. All rights reserved.
+            © {year} daftedu. Todos os direitos reservados.
           </p>
           <div className="flex space-x-6">
             <a href="#" className="text-slate-500 hover:text-daft-500 dark:text-slate-400 dark:hover:text-daft-400">

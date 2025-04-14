@@ -21,13 +21,13 @@ export function Navbar() {
         
         <div className="hidden md:flex items-center gap-6">
           <nav className="flex items-center gap-6">
-            <Button variant="link" onClick={() => navigate('/')}>Home</Button>
-            <Button variant="link" onClick={() => navigate('/pricing')}>Pricing</Button>
-            <Button variant="link" onClick={() => navigate('/about')}>About</Button>
+            <Button variant="link" onClick={() => navigate('/')}>Início</Button>
+            <Button variant="link" onClick={() => navigate('/pricing')}>Preços</Button>
+            <Button variant="link" onClick={() => navigate('/about')}>Sobre</Button>
           </nav>
           <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={() => navigate('/login')}>Login</Button>
-            <Button className="gradient-bg" onClick={() => navigate('/signup')}>Sign Up</Button>
+            <Button variant="outline" onClick={() => navigate('/login')}>Entrar</Button>
+            <Button className="gradient-bg" onClick={() => navigate('/signup')}>Cadastrar</Button>
           </div>
         </div>
         
@@ -47,12 +47,12 @@ export function Navbar() {
         isMenuOpen && "max-h-[400px]"
       )}>
         <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
-          <Button variant="ghost" className="justify-start" onClick={() => { navigate('/'); setIsMenuOpen(false); }}>Home</Button>
-          <Button variant="ghost" className="justify-start" onClick={() => { navigate('/pricing'); setIsMenuOpen(false); }}>Pricing</Button>
-          <Button variant="ghost" className="justify-start" onClick={() => { navigate('/about'); setIsMenuOpen(false); }}>About</Button>
+          <Button variant="ghost" className="justify-start" onClick={() => { navigate('/'); setIsMenuOpen(false); }}>Início</Button>
+          <Button variant="ghost" className="justify-start" onClick={() => { navigate('/pricing'); setIsMenuOpen(false); }}>Preços</Button>
+          <Button variant="ghost" className="justify-start" onClick={() => { navigate('/about'); setIsMenuOpen(false); }}>Sobre</Button>
           <div className="flex flex-col gap-2 pt-2 border-t">
-            <Button variant="outline" onClick={() => { navigate('/login'); setIsMenuOpen(false); }}>Login</Button>
-            <Button className="gradient-bg" onClick={() => { navigate('/signup'); setIsMenuOpen(false); }}>Sign Up</Button>
+            <Button variant="outline" onClick={() => { navigate('/login'); setIsMenuOpen(false); }}>Entrar</Button>
+            <Button className="gradient-bg" onClick={() => { navigate('/signup'); setIsMenuOpen(false); }}>Cadastrar</Button>
           </div>
         </div>
       </div>
