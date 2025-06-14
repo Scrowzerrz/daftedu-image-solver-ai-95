@@ -11,31 +11,43 @@ export type Database = {
     Tables: {
       profiles: {
         Row: {
+          ai_credits: number
           avatar_url: string | null
           created_at: string
           email: string
           id: string
           name: string | null
+          points: number
           subscription: string | null
           updated_at: string
+          user_type: string
+          username: string
         }
         Insert: {
+          ai_credits?: number
           avatar_url?: string | null
           created_at?: string
           email: string
           id: string
           name?: string | null
+          points?: number
           subscription?: string | null
           updated_at?: string
+          user_type?: string
+          username: string
         }
         Update: {
+          ai_credits?: number
           avatar_url?: string | null
           created_at?: string
           email?: string
           id?: string
           name?: string | null
+          points?: number
           subscription?: string | null
           updated_at?: string
+          user_type?: string
+          username?: string
         }
         Relationships: []
       }

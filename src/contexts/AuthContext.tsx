@@ -9,9 +9,13 @@ import type { User, Session } from "@supabase/supabase-js";
 interface UserProfile {
   id: string;
   email: string;
-  name?: string;
-  avatar_url?: string;
-  subscription?: "free" | "pro" | "premium";
+  name?: string | null;
+  avatar_url?: string | null;
+  subscription?: "free" | "pro" | "premium" | null;
+  username: string;
+  user_type: string;
+  ai_credits: number;
+  points: number;
 }
 
 interface AuthContextType {
@@ -43,15 +47,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .eq('id', userId)
         .single();
       
-      if (error) throw error;
+      if (error && error.code !== 'PGRST116') { // PGRST116: row not found
+        throw error;
+      }
+
+      if (!data) return null;
       
-      // Ensure subscription is properly typed
-      const profile: UserProfile = {
-        ...data,
-        subscription: (data.subscription as "free" | "pro" | "premium") || "free"
-      };
-      
-      return profile;
+      return data as UserProfile;
     } catch (error) {
       console.error('Error fetching user profile:', error);
       return null;
@@ -221,11 +223,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error) throw error;
       
-      // Update local state with proper typing
+      // Update local state
       const updatedUser: UserProfile = { 
         ...user, 
         ...data,
-        subscription: (data.subscription as "free" | "pro" | "premium") || user.subscription || "free"
       };
       setUser(updatedUser);
       
