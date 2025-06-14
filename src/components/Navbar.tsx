@@ -2,12 +2,29 @@
 import { useState } from 'react';
 import { Button } from './ui/button';
 import { useNavigate } from 'react-router-dom';
-import { FileImage, Menu, X } from 'lucide-react';
+import { FileImage, Menu, X, User, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 dark:bg-slate-900/80 dark:border-slate-800">
@@ -25,10 +42,32 @@ export function Navbar() {
             <Button variant="link" onClick={() => navigate('/pricing')}>Preços</Button>
             <Button variant="link" onClick={() => navigate('/about')}>Sobre</Button>
           </nav>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={() => navigate('/login')}>Entrar</Button>
-            <Button className="gradient-bg" onClick={() => navigate('/signup')}>Cadastrar</Button>
-          </div>
+          
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  {user.name || user.email}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => navigate('/dashboard')}>
+                  Dashboard
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sair
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={() => navigate('/login')}>Entrar</Button>
+              <Button className="gradient-bg" onClick={() => navigate('/signup')}>Cadastrar</Button>
+            </div>
+          )}
         </div>
         
         <Button 
@@ -50,10 +89,23 @@ export function Navbar() {
           <Button variant="ghost" className="justify-start" onClick={() => { navigate('/'); setIsMenuOpen(false); }}>Início</Button>
           <Button variant="ghost" className="justify-start" onClick={() => { navigate('/pricing'); setIsMenuOpen(false); }}>Preços</Button>
           <Button variant="ghost" className="justify-start" onClick={() => { navigate('/about'); setIsMenuOpen(false); }}>Sobre</Button>
-          <div className="flex flex-col gap-2 pt-2 border-t">
-            <Button variant="outline" onClick={() => { navigate('/login'); setIsMenuOpen(false); }}>Entrar</Button>
-            <Button className="gradient-bg" onClick={() => { navigate('/signup'); setIsMenuOpen(false); }}>Cadastrar</Button>
-          </div>
+          
+          {user ? (
+            <div className="flex flex-col gap-2 pt-2 border-t">
+              <Button variant="ghost" className="justify-start" onClick={() => { navigate('/dashboard'); setIsMenuOpen(false); }}>
+                Dashboard
+              </Button>
+              <Button variant="ghost" className="justify-start" onClick={() => { handleSignOut(); setIsMenuOpen(false); }}>
+                <LogOut className="h-4 w-4 mr-2" />
+                Sair
+              </Button>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2 pt-2 border-t">
+              <Button variant="outline" onClick={() => { navigate('/login'); setIsMenuOpen(false); }}>Entrar</Button>
+              <Button className="gradient-bg" onClick={() => { navigate('/signup'); setIsMenuOpen(false); }}>Cadastrar</Button>
+            </div>
+          )}
         </div>
       </div>
     </header>

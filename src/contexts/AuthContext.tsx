@@ -1,10 +1,12 @@
+
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import type { User, Session } from "@supabase/supabase-js";
 
-// This is a placeholder that should be replaced with actual Supabase auth implementation
-interface User {
+// User interface based on our profiles table
+interface UserProfile {
   id: string;
   email: string;
   name?: string;
@@ -13,78 +15,98 @@ interface User {
 }
 
 interface AuthContextType {
-  user: User | null;
+  user: UserProfile | null;
+  session: Session | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, name?: string) => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
-  updateProfile: (data: Partial<User>) => Promise<void>;
+  updateProfile: (data: Partial<UserProfile>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  // This is where we would initialize Supabase auth and listen for auth state changes
+  // Fetch user profile from our profiles table
+  const fetchUserProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      return null;
+    }
+  };
+  
+  // Initialize auth state and set up listener
   useEffect(() => {
-    // Simulate auth state check
-    const checkAuth = async () => {
-      try {
-        // In a real implementation, we would check the Supabase auth state
-        const savedUser = localStorage.getItem("daftedu_user");
-        if (savedUser) {
-          setUser(JSON.parse(savedUser));
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.email);
+        setSession(session);
+        
+        if (session?.user) {
+          // Fetch user profile data
+          const profile = await fetchUserProfile(session.user.id);
+          setUser(profile);
+        } else {
+          setUser(null);
         }
-      } catch (error) {
-        console.error("Auth state check failed:", error);
-      } finally {
+        
         setLoading(false);
       }
-    };
+    );
     
-    checkAuth();
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        fetchUserProfile(session.user.id).then(profile => {
+          setUser(profile);
+          setSession(session);
+          setLoading(false);
+        });
+      } else {
+        setLoading(false);
+      }
+    });
     
-    // Cleanup function
-    return () => {
-      // Clear any subscriptions or listeners
-    };
+    return () => subscription.unsubscribe();
   }, []);
   
   const signIn = async (email: string, password: string) => {
     try {
       setLoading(true);
       
-      // In a real implementation, we would use Supabase auth
-      // const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      // if (error) throw error;
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
       
-      // Mock successful auth for demo
-      if (email === "demo@example.com" && password === "password") {
-        const mockUser = {
-          id: "usr_" + Math.random().toString(36).substring(2, 15),
-          email,
-          name: "Demo User",
-          subscription: "free" as const
-        };
-        setUser(mockUser);
-        localStorage.setItem("daftedu_user", JSON.stringify(mockUser));
-        toast({
-          title: "Signed in successfully!",
-          description: `Welcome back, ${mockUser.name}!`,
-        });
-        navigate("/dashboard");
-      } else {
-        throw new Error("Invalid email or password");
-      }
+      if (error) throw error;
+      
+      toast({
+        title: "Login realizado com sucesso!",
+        description: `Bem-vindo de volta!`,
+      });
+      navigate("/dashboard");
     } catch (error: any) {
       toast({
-        title: "Sign in failed",
-        description: error.message || "Please check your credentials and try again.",
+        title: "Erro no login",
+        description: error.message || "Verifique suas credenciais e tente novamente.",
         variant: "destructive"
       });
       throw error;
@@ -97,28 +119,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setLoading(true);
       
-      // In a real implementation, we would use Supabase auth
-      // const { data, error } = await supabase.auth.signUp({ email, password });
-      // if (error) throw error;
+      const redirectUrl = `${window.location.origin}/`;
       
-      // Mock successful signup for demo
-      const mockUser = {
-        id: "usr_" + Math.random().toString(36).substring(2, 15),
+      const { data, error } = await supabase.auth.signUp({
         email,
-        name: name || email.split("@")[0],
-        subscription: "free" as const
-      };
-      setUser(mockUser);
-      localStorage.setItem("daftedu_user", JSON.stringify(mockUser));
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            name: name || email.split("@")[0]
+          }
+        }
+      });
+      
+      if (error) throw error;
+      
       toast({
-        title: "Account created successfully!",
-        description: "Welcome to daftedu!",
+        title: "Conta criada com sucesso!",
+        description: "Verifique seu email para confirmar sua conta.",
       });
       navigate("/dashboard");
     } catch (error: any) {
       toast({
-        title: "Sign up failed",
-        description: error.message || "Please try again with a different email.",
+        title: "Erro no cadastro",
+        description: error.message || "Tente novamente com um email diferente.",
         variant: "destructive"
       });
       throw error;
@@ -131,20 +155,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setLoading(true);
       
-      // In a real implementation, we would use Supabase auth
-      // await supabase.auth.signOut();
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
       
-      // Mock signout
       setUser(null);
-      localStorage.removeItem("daftedu_user");
+      setSession(null);
+      
       toast({
-        title: "Signed out successfully",
+        title: "Logout realizado com sucesso",
       });
       navigate("/");
     } catch (error: any) {
       toast({
-        title: "Sign out failed",
-        description: error.message || "Please try again.",
+        title: "Erro no logout",
+        description: error.message || "Tente novamente.",
         variant: "destructive"
       });
     } finally {
@@ -156,48 +180,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setLoading(true);
       
-      // In a real implementation, we would use Supabase auth
-      // const { error } = await supabase.auth.resetPasswordForEmail(email);
-      // if (error) throw error;
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
       
-      // Mock successful password reset for demo
-      // Always show success message for security reasons
+      if (error) throw error;
+      
       toast({
         title: "Link de redefinição enviado",
-        description: "Se o email estiver cadastrado, você receberá um link para redefinir sua senha.",
+        description: "Verifique seu email para redefinir sua senha.",
       });
     } catch (error: any) {
-      // Even on error, show success message for security
       toast({
-        title: "Link de redefinição enviado",
-        description: "Se o email estiver cadastrado, você receberá um link para redefinir sua senha.",
+        title: "Erro ao enviar link",
+        description: error.message || "Tente novamente.",
+        variant: "destructive"
       });
     } finally {
       setLoading(false);
     }
   };
   
-  const updateProfile = async (data: Partial<User>) => {
+  const updateProfile = async (data: Partial<UserProfile>) => {
     try {
       setLoading(true);
       
-      // In a real implementation, we would use Supabase
-      // const { error } = await supabase.from('profiles').update(data).eq('id', user.id);
-      // if (error) throw error;
+      if (!user) throw new Error("Usuário não autenticado");
       
-      // Mock update
-      if (user) {
-        const updatedUser = { ...user, ...data };
-        setUser(updatedUser);
-        localStorage.setItem("daftedu_user", JSON.stringify(updatedUser));
-        toast({
-          title: "Profile updated successfully",
-        });
-      }
+      const { error } = await supabase
+        .from('profiles')
+        .update(data)
+        .eq('id', user.id);
+      
+      if (error) throw error;
+      
+      // Update local state
+      setUser({ ...user, ...data });
+      
+      toast({
+        title: "Perfil atualizado com sucesso",
+      });
     } catch (error: any) {
       toast({
-        title: "Profile update failed",
-        description: error.message || "Please try again.",
+        title: "Erro ao atualizar perfil",
+        description: error.message || "Tente novamente.",
         variant: "destructive"
       });
       throw error;
@@ -208,6 +234,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   
   const value = {
     user,
+    session,
     loading,
     signIn,
     signUp,

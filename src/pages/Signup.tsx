@@ -32,7 +32,7 @@ const Signup = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <div className="flex-grow container mx-auto px-4 py-16 mt-10 flex items-center justify-center">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md shadow-xl border-0 bg-white/95 backdrop-blur-sm">
           <CardHeader className="text-center">
             <div className="flex items-center justify-center mb-4">
               <FileImage className="h-8 w-8 text-daft-600" />
@@ -54,6 +54,7 @@ const Signup = () => {
                   placeholder="João Silva"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  className="rounded-xl h-11 border-gray-200 focus:border-daft-500"
                   required
                 />
               </div>
@@ -67,6 +68,7 @@ const Signup = () => {
                   placeholder="nome@exemplo.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="rounded-xl h-11 border-gray-200 focus:border-daft-500"
                   required
                 />
               </div>
@@ -80,6 +82,7 @@ const Signup = () => {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="rounded-xl h-11 border-gray-200 focus:border-daft-500"
                   required
                 />
               </div>
@@ -98,7 +101,7 @@ const Signup = () => {
             <CardFooter className="flex flex-col space-y-4">
               <Button 
                 type="submit" 
-                className="w-full gradient-bg" 
+                className="w-full gradient-bg rounded-xl h-11 font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-200" 
                 disabled={isLoading}
               >
                 {isLoading ? (
