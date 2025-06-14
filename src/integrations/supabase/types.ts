@@ -9,6 +9,113 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      disciplinas: {
+        Row: {
+          created_at: string | null
+          id: string
+          materia_id: string | null
+          nome: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          materia_id?: string | null
+          nome: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          materia_id?: string | null
+          nome?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "disciplinas_materia_id_fkey"
+            columns: ["materia_id"]
+            isOneToOne: false
+            referencedRelation: "materias"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      materias: {
+        Row: {
+          created_at: string | null
+          descricao: string | null
+          id: string
+          nome: string
+        }
+        Insert: {
+          created_at?: string | null
+          descricao?: string | null
+          id?: string
+          nome: string
+        }
+        Update: {
+          created_at?: string | null
+          descricao?: string | null
+          id?: string
+          nome?: string
+        }
+        Relationships: []
+      }
+      perguntas: {
+        Row: {
+          anexos: Json | null
+          conteudo: string
+          created_at: string | null
+          disciplina_id: string | null
+          id: string
+          materia_id: string | null
+          pontos: number
+          status: string | null
+          titulo: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          anexos?: Json | null
+          conteudo: string
+          created_at?: string | null
+          disciplina_id?: string | null
+          id?: string
+          materia_id?: string | null
+          pontos?: number
+          status?: string | null
+          titulo: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          anexos?: Json | null
+          conteudo?: string
+          created_at?: string | null
+          disciplina_id?: string | null
+          id?: string
+          materia_id?: string | null
+          pontos?: number
+          status?: string | null
+          titulo?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "perguntas_disciplina_id_fkey"
+            columns: ["disciplina_id"]
+            isOneToOne: false
+            referencedRelation: "disciplinas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "perguntas_materia_id_fkey"
+            columns: ["materia_id"]
+            isOneToOne: false
+            referencedRelation: "materias"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           ai_credits: number
