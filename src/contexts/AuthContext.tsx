@@ -44,7 +44,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .single();
       
       if (error) throw error;
-      return data;
+      
+      // Ensure subscription is properly typed
+      const profile: UserProfile = {
+        ...data,
+        subscription: (data.subscription as "free" | "pro" | "premium") || "free"
+      };
+      
+      return profile;
     } catch (error) {
       console.error('Error fetching user profile:', error);
       return null;
@@ -214,8 +221,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error) throw error;
       
-      // Update local state
-      setUser({ ...user, ...data });
+      // Update local state with proper typing
+      const updatedUser: UserProfile = { 
+        ...user, 
+        ...data,
+        subscription: (data.subscription as "free" | "pro" | "premium") || user.subscription || "free"
+      };
+      setUser(updatedUser);
       
       toast({
         title: "Perfil atualizado com sucesso",
