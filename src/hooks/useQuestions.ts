@@ -97,13 +97,13 @@ export const useQuestions = (searchQuery = '', filters = { materia: '', status: 
             return {
               ...question,
               profiles: profile || undefined
-            };
+            } as Question;
           }
-          return question;
+          return question as Question;
         })
       );
       
-      return questionsWithProfiles as Question[];
+      return questionsWithProfiles;
     },
   });
 };
@@ -124,7 +124,7 @@ export const useQuestion = (id: string) => {
       if (error) throw error;
 
       // Buscar perfil do usuário separadamente
-      let questionWithProfile = question;
+      let questionWithProfile = question as Question;
       if (question.user_id) {
         const { data: profile } = await supabase
           .from('profiles')
@@ -135,10 +135,10 @@ export const useQuestion = (id: string) => {
         questionWithProfile = {
           ...question,
           profiles: profile || undefined
-        };
+        } as Question;
       }
       
-      return questionWithProfile as Question;
+      return questionWithProfile;
     },
     enabled: !!id,
   });
@@ -186,9 +186,9 @@ export const useAnswers = (questionId: string) => {
                 return {
                   ...comment,
                   profiles: profile || undefined
-                };
+                } as Comment;
               }
-              return comment;
+              return comment as Comment;
             })
           );
 
@@ -196,11 +196,11 @@ export const useAnswers = (questionId: string) => {
             ...answer,
             profiles: answerProfile,
             comentarios: commentsWithProfiles
-          };
+          } as Answer;
         })
       );
       
-      return answersWithProfiles as Answer[];
+      return answersWithProfiles;
     },
     enabled: !!questionId,
   });
