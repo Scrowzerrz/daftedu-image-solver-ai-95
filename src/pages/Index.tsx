@@ -2,6 +2,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { Features } from "@/components/Features";
+import { MainFeatures } from "@/components/MainFeatures";
 import { Testimonials } from "@/components/Testimonials";
 import { Pricing } from "@/components/Pricing";
 import { CTA } from "@/components/CTA";
@@ -14,6 +15,7 @@ const Index = () => {
       <main className="pt-16">
         <Hero />
         <Features />
+        <MainFeatures />
         <Testimonials />
         <Pricing />
         <CTA />
