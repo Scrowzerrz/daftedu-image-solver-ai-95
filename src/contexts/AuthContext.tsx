@@ -35,12 +35,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   
   // Fetch user profile from our profiles table
-  const fetchUserProfile = async (userId: string) => {
+  const fetchUserProfile = async (userId: string): Promise<UserProfile | null> => {
     try {
+      console.log('Fetching user profile for:', userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -48,11 +50,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .single();
       
       if (error && error.code !== 'PGRST116') { // PGRST116: row not found
-        throw error;
+        console.error('Error fetching user profile:', error);
+        return null;
       }
 
-      if (!data) return null;
+      if (!data) {
+        console.log('No profile found for user:', userId);
+        return null;
+      }
       
+      console.log('User profile fetched successfully:', data);
       return data as UserProfile;
     } catch (error) {
       console.error('Error fetching user profile:', error);
@@ -60,40 +67,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
   
-  // Initialize auth state and set up listener
-  useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.email);
-        setSession(session);
-        
-        if (session?.user) {
-          // Fetch user profile data
+  // Handle auth state changes
+  const handleAuthStateChange = async (event: string, session: Session | null) => {
+    console.log('Auth state changed:', event, session?.user?.email);
+    
+    try {
+      setSession(session);
+      
+      if (session?.user) {
+        // Only fetch profile if we don't have user data or if user changed
+        if (!user || user.id !== session.user.id) {
           const profile = await fetchUserProfile(session.user.id);
           setUser(profile);
-        } else {
-          setUser(null);
         }
-        
-        setLoading(false);
-      }
-    );
-    
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        fetchUserProfile(session.user.id).then(profile => {
-          setUser(profile);
-          setSession(session);
-          setLoading(false);
-        });
       } else {
-        setLoading(false);
+        setUser(null);
       }
-    });
+    } catch (error) {
+      console.error('Error handling auth state change:', error);
+      setUser(null);
+    } finally {
+      if (!isInitialized) {
+        setIsInitialized(true);
+      }
+      setLoading(false);
+    }
+  };
+  
+  // Initialize auth state
+  useEffect(() => {
+    console.log('Initializing auth state...');
     
-    return () => subscription.unsubscribe();
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(handleAuthStateChange);
+    
+    // Safety timeout to ensure loading state is resolved
+    const timeoutId = setTimeout(() => {
+      if (!isInitialized) {
+        console.warn('Auth initialization timeout - setting loading to false');
+        setLoading(false);
+        setIsInitialized(true);
+      }
+    }, 5000); // 5 second timeout
+    
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeoutId);
+    };
   }, []);
   
   const signIn = async (email: string, password: string) => {
@@ -119,8 +139,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         variant: "destructive"
       });
       throw error;
-    } finally {
-      setLoading(false);
     }
   };
   
@@ -155,8 +173,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         variant: "destructive"
       });
       throw error;
-    } finally {
-      setLoading(false);
     }
   };
   
