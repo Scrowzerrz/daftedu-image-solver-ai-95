@@ -10,7 +10,7 @@ import { QuestionsList } from "@/components/dashboard/QuestionsList";
 import { NewQuestionButton } from "@/components/dashboard/NewQuestionButton";
 import { StatsCard } from "@/components/dashboard/StatsCard";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Trophy, Target, Zap } from "lucide-react";
+import { BookOpen, Trophy, Target, Zap, TrendingUp, Users, Clock } from "lucide-react";
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
@@ -45,38 +45,44 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-blue-50/30 to-daft-50/20">
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
       
-      <main className="flex-1 pt-20">
-        {/* Hero Section */}
-        <div className="bg-gradient-to-r from-daft-600 to-blue-600 text-white">
-          <div className="container mx-auto px-4 py-12">
-            <div className="animate-fade-in">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                Olá, {user.name || user.email?.split('@')[0]}! 👋
-              </h1>
-              <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-2xl">
-                Pronto para aprender algo novo hoje? Explore milhares de perguntas e respostas.
-              </p>
-            </div>
-            
-            {/* Search Section */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 animate-slide-up">
-              <div className="flex flex-col lg:flex-row gap-4 items-center">
-                <div className="flex-1 w-full">
-                  <SearchBar 
-                    value={searchQuery}
-                    onChange={setSearchQuery}
-                    placeholder="Pesquise qualquer pergunta... 🔍"
-                  />
-                </div>
-                <div className="flex gap-3">
-                  <FilterDropdown 
-                    filters={filters}
-                    onFiltersChange={setFilters}
-                  />
-                  <NewQuestionButton />
+      <main className="flex-1 pt-16">
+        {/* Enhanced Hero Section */}
+        <div className="bg-white border-b border-gray-200 shadow-sm">
+          <div className="container mx-auto px-4 py-8 lg:py-12">
+            <div className="max-w-4xl mx-auto">
+              {/* Welcome Header */}
+              <div className="text-center mb-8 animate-fade-in">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+                  Bem-vindo ao DaftEdu
+                </h1>
+                <p className="text-lg md:text-xl text-gray-600 mb-2">
+                  Olá, <span className="font-semibold text-daft-600">{user.name || user.email?.split('@')[0]}</span>
+                </p>
+                <p className="text-gray-500">
+                  Explore perguntas, compartilhe conhecimento e aprenda junto com a comunidade
+                </p>
+              </div>
+              
+              {/* Search and Actions */}
+              <div className="bg-gray-50 rounded-2xl p-6 lg:p-8 animate-slide-up">
+                <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
+                  <div className="flex-1">
+                    <SearchBar 
+                      value={searchQuery}
+                      onChange={setSearchQuery}
+                      placeholder="Busque qualquer pergunta ou tópico..."
+                    />
+                  </div>
+                  <div className="flex gap-3 flex-shrink-0">
+                    <FilterDropdown 
+                      filters={filters}
+                      onFiltersChange={setFilters}
+                    />
+                    <NewQuestionButton />
+                  </div>
                 </div>
               </div>
             </div>
@@ -84,8 +90,8 @@ const Dashboard = () => {
         </div>
 
         <div className="container mx-auto px-4 py-8">
-          {/* Stats Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
             <StatsCard
               icon={BookOpen}
               title="Perguntas Respondidas"
@@ -120,29 +126,68 @@ const Dashboard = () => {
             />
           </div>
 
-          {/* Daily Challenge */}
-          <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl p-6 mb-8 text-white animate-scale-in">
-            <div className="flex items-center justify-between">
+          {/* Quick Stats Bar */}
+          <div className="bg-white rounded-xl p-6 mb-8 shadow-sm border border-gray-200 animate-fade-in">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                  <Trophy className="h-6 w-6" />
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                  <TrendingUp className="h-6 w-6 text-blue-600" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">Desafio Diário</h3>
-                  <p className="text-yellow-100">Responda 5 perguntas para ganhar 50 pontos</p>
+                  <p className="text-sm text-gray-500">Atividade hoje</p>
+                  <p className="text-xl font-bold text-gray-900">0 interações</p>
                 </div>
               </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold">0/5</div>
-                <div className="w-24 bg-white/20 rounded-full h-2 mt-2">
-                  <div className="bg-white h-2 rounded-full transition-all duration-500" style={{ width: "0%" }}></div>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                  <Users className="h-6 w-6 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Ranking atual</p>
+                  <p className="text-xl font-bold text-gray-900">Iniciante</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                  <Clock className="h-6 w-6 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Tempo online</p>
+                  <p className="text-xl font-bold text-gray-900">0 min hoje</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Questions List */}
-          <div className="animate-fade-in-up">
+          {/* Daily Challenge */}
+          <div className="bg-gradient-to-r from-daft-500 to-blue-500 rounded-xl p-6 mb-8 text-white shadow-lg animate-scale-in">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Trophy className="h-8 w-8" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold mb-1">Desafio Diário</h3>
+                  <p className="text-blue-100">Responda 5 perguntas para ganhar 50 pontos extras</p>
+                </div>
+              </div>
+              <div className="flex flex-col items-center md:items-end gap-2">
+                <div className="text-3xl font-bold">0/5</div>
+                <div className="w-32 bg-white/20 rounded-full h-3">
+                  <div className="bg-white h-3 rounded-full transition-all duration-500" style={{ width: "0%" }}></div>
+                </div>
+                <Button 
+                  variant="outline" 
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 mt-2"
+                >
+                  Começar Agora
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Questions Section */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 animate-fade-in-up">
             <QuestionsList 
               searchQuery={searchQuery}
               filters={filters}
