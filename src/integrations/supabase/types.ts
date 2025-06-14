@@ -9,50 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      answers: {
-        Row: {
-          author_id: string
-          author_name: string
-          content: string
-          created_at: string | null
-          id: string
-          is_best_answer: boolean | null
-          likes: number | null
-          question_id: string
-          updated_at: string | null
-        }
-        Insert: {
-          author_id: string
-          author_name: string
-          content: string
-          created_at?: string | null
-          id?: string
-          is_best_answer?: boolean | null
-          likes?: number | null
-          question_id: string
-          updated_at?: string | null
-        }
-        Update: {
-          author_id?: string
-          author_name?: string
-          content?: string
-          created_at?: string | null
-          id?: string
-          is_best_answer?: boolean | null
-          likes?: number | null
-          question_id?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "answers_question_id_fkey"
-            columns: ["question_id"]
-            isOneToOne: false
-            referencedRelation: "questions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       comentarios: {
         Row: {
           conteudo: string
@@ -81,41 +37,6 @@ export type Database = {
             columns: ["resposta_id"]
             isOneToOne: false
             referencedRelation: "respostas"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      comments: {
-        Row: {
-          answer_id: string
-          author_id: string
-          author_name: string
-          content: string
-          created_at: string | null
-          id: string
-        }
-        Insert: {
-          answer_id: string
-          author_id: string
-          author_name: string
-          content: string
-          created_at?: string | null
-          id?: string
-        }
-        Update: {
-          answer_id?: string
-          author_id?: string
-          author_name?: string
-          content?: string
-          created_at?: string | null
-          id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "comments_answer_id_fkey"
-            columns: ["answer_id"]
-            isOneToOne: false
-            referencedRelation: "answers"
             referencedColumns: ["id"]
           },
         ]

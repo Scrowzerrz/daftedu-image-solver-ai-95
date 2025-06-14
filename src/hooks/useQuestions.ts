@@ -64,8 +64,8 @@ export const useQuestions = (searchQuery = '', filters = { materia: '', status: 
         .from('perguntas')
         .select(`
           *,
-          profiles:user_id (name, username, avatar_url),
-          materias:materia_id (nome)
+          profiles!perguntas_user_id_fkey (name, username, avatar_url),
+          materias (nome)
         `)
         .order('created_at', { ascending: false });
 
@@ -97,8 +97,8 @@ export const useQuestion = (id: string) => {
         .from('perguntas')
         .select(`
           *,
-          profiles:user_id (name, username, avatar_url),
-          materias:materia_id (nome)
+          profiles!perguntas_user_id_fkey (name, username, avatar_url),
+          materias (nome)
         `)
         .eq('id', id)
         .single();
@@ -118,10 +118,10 @@ export const useAnswers = (questionId: string) => {
         .from('respostas')
         .select(`
           *,
-          profiles:user_id (name, username, avatar_url),
-          comentarios:comentarios (
+          profiles!respostas_user_id_fkey (name, username, avatar_url),
+          comentarios (
             *,
-            profiles:user_id (name, username, avatar_url)
+            profiles!comentarios_user_id_fkey (name, username, avatar_url)
           )
         `)
         .eq('pergunta_id', questionId)
