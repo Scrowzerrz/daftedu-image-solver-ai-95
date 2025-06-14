@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -161,17 +160,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // const { error } = await supabase.auth.resetPasswordForEmail(email);
       // if (error) throw error;
       
+      // Mock successful password reset for demo
+      // Always show success message for security reasons
       toast({
-        title: "Password reset email sent",
-        description: "Check your inbox for the reset link.",
+        title: "Link de redefinição enviado",
+        description: "Se o email estiver cadastrado, você receberá um link para redefinir sua senha.",
       });
     } catch (error: any) {
+      // Even on error, show success message for security
       toast({
-        title: "Password reset failed",
-        description: error.message || "Please try again.",
-        variant: "destructive"
+        title: "Link de redefinição enviado",
+        description: "Se o email estiver cadastrado, você receberá um link para redefinir sua senha.",
       });
-      throw error;
     } finally {
       setLoading(false);
     }
