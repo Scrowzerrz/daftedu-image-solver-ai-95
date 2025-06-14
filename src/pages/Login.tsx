@@ -12,18 +12,20 @@ import { Link } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { signIn } = useAuth();
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return; // Prevent double submission
+    
     try {
-      setIsLoading(true);
+      setIsSubmitting(true);
       await signIn(email, password);
     } catch (error) {
       console.error("Login failed:", error);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -57,6 +59,7 @@ const Login = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="rounded-xl h-11 border-gray-200 focus:border-daft-500"
                   required
+                  disabled={isSubmitting}
                 />
               </div>
               <div className="space-y-2">
@@ -79,18 +82,23 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="rounded-xl h-11 border-gray-200 focus:border-daft-500"
                   required
+                  disabled={isSubmitting}
                 />
               </div>
               
               <Button 
                 type="submit" 
                 className="w-full gradient-bg rounded-xl h-11 font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-200" 
-                disabled={isLoading}
+                disabled={isSubmitting}
               >
-                {isLoading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : null}
-                Entrar
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Entrando...
+                  </>
+                ) : (
+                  "Entrar"
+                )}
               </Button>
             </form>
           </CardContent>

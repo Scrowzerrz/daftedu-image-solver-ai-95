@@ -35,7 +35,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isInitialized, setIsInitialized] = useState<boolean>(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -75,11 +74,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(session);
       
       if (session?.user) {
-        // Only fetch profile if we don't have user data or if user changed
-        if (!user || user.id !== session.user.id) {
-          const profile = await fetchUserProfile(session.user.id);
-          setUser(profile);
-        }
+        // Fetch profile asynchronously to avoid blocking the auth state change
+        setTimeout(() => {
+          fetchUserProfile(session.user.id).then((profile) => {
+            setUser(profile);
+          });
+        }, 0);
       } else {
         setUser(null);
       }
@@ -87,9 +87,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Error handling auth state change:', error);
       setUser(null);
     } finally {
-      if (!isInitialized) {
-        setIsInitialized(true);
-      }
       setLoading(false);
     }
   };
@@ -98,28 +95,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     console.log('Initializing auth state...');
     
+    // Get initial session first
+    const initializeAuth = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error('Error getting initial session:', error);
+        } else {
+          console.log('Initial session:', session?.user?.email || 'No session');
+          await handleAuthStateChange('INITIAL_SESSION', session);
+        }
+      } catch (error) {
+        console.error('Error initializing auth:', error);
+        setLoading(false);
+      }
+    };
+
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(handleAuthStateChange);
     
-    // Safety timeout to ensure loading state is resolved
-    const timeoutId = setTimeout(() => {
-      if (!isInitialized) {
-        console.warn('Auth initialization timeout - setting loading to false');
-        setLoading(false);
-        setIsInitialized(true);
-      }
-    }, 5000); // 5 second timeout
+    // Initialize with current session
+    initializeAuth();
     
     return () => {
       subscription.unsubscribe();
-      clearTimeout(timeoutId);
     };
   }, []);
   
   const signIn = async (email: string, password: string) => {
     try {
-      setLoading(true);
-      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -144,8 +148,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   
   const signUp = async (email: string, password: string, name?: string) => {
     try {
-      setLoading(true);
-      
       const redirectUrl = `${window.location.origin}/`;
       
       const { data, error } = await supabase.auth.signUp({
@@ -178,8 +180,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   
   const signOut = async () => {
     try {
-      setLoading(true);
-      
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       
@@ -196,15 +196,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: error.message || "Tente novamente.",
         variant: "destructive"
       });
-    } finally {
-      setLoading(false);
     }
   };
   
   const resetPassword = async (email: string) => {
     try {
-      setLoading(true);
-      
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
@@ -221,15 +217,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: error.message || "Tente novamente.",
         variant: "destructive"
       });
-    } finally {
-      setLoading(false);
     }
   };
   
   const updateProfile = async (data: Partial<UserProfile>) => {
     try {
-      setLoading(true);
-      
       if (!user) throw new Error("Usuário não autenticado");
       
       const { error } = await supabase
@@ -256,8 +248,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         variant: "destructive"
       });
       throw error;
-    } finally {
-      setLoading(false);
     }
   };
   
