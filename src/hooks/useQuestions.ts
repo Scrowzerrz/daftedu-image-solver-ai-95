@@ -64,7 +64,6 @@ export const useQuestions = (searchQuery = '', filters = { materia: '', status: 
         .from('perguntas')
         .select(`
           *,
-          profiles!perguntas_user_id_fkey (name, username, avatar_url),
           materias (nome)
         `)
         .order('created_at', { ascending: false });
@@ -81,10 +80,30 @@ export const useQuestions = (searchQuery = '', filters = { materia: '', status: 
         query = query.eq('status', filters.status);
       }
 
-      const { data, error } = await query;
+      const { data: questions, error } = await query;
       
       if (error) throw error;
-      return data as Question[];
+
+      // Buscar perfis separadamente para cada pergunta
+      const questionsWithProfiles = await Promise.all(
+        (questions || []).map(async (question) => {
+          if (question.user_id) {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('name, username, avatar_url')
+              .eq('id', question.user_id)
+              .single();
+            
+            return {
+              ...question,
+              profiles: profile || undefined
+            };
+          }
+          return question;
+        })
+      );
+      
+      return questionsWithProfiles as Question[];
     },
   });
 };
@@ -93,18 +112,33 @@ export const useQuestion = (id: string) => {
   return useQuery({
     queryKey: ['question', id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: question, error } = await supabase
         .from('perguntas')
         .select(`
           *,
-          profiles!perguntas_user_id_fkey (name, username, avatar_url),
           materias (nome)
         `)
         .eq('id', id)
         .single();
       
       if (error) throw error;
-      return data as Question;
+
+      // Buscar perfil do usuário separadamente
+      let questionWithProfile = question;
+      if (question.user_id) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('name, username, avatar_url')
+          .eq('id', question.user_id)
+          .single();
+        
+        questionWithProfile = {
+          ...question,
+          profiles: profile || undefined
+        };
+      }
+      
+      return questionWithProfile as Question;
     },
     enabled: !!id,
   });
@@ -114,21 +148,59 @@ export const useAnswers = (questionId: string) => {
   return useQuery({
     queryKey: ['answers', questionId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: answers, error } = await supabase
         .from('respostas')
         .select(`
           *,
-          profiles!respostas_user_id_fkey (name, username, avatar_url),
-          comentarios (
-            *,
-            profiles!comentarios_user_id_fkey (name, username, avatar_url)
-          )
+          comentarios (*)
         `)
         .eq('pergunta_id', questionId)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data as Answer[];
+
+      // Buscar perfis para respostas e comentários separadamente
+      const answersWithProfiles = await Promise.all(
+        (answers || []).map(async (answer) => {
+          // Buscar perfil do autor da resposta
+          let answerProfile = undefined;
+          if (answer.user_id) {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('name, username, avatar_url')
+              .eq('id', answer.user_id)
+              .single();
+            answerProfile = profile || undefined;
+          }
+
+          // Buscar perfis dos autores dos comentários
+          const commentsWithProfiles = await Promise.all(
+            (answer.comentarios || []).map(async (comment: any) => {
+              if (comment.user_id) {
+                const { data: profile } = await supabase
+                  .from('profiles')
+                  .select('name, username, avatar_url')
+                  .eq('id', comment.user_id)
+                  .single();
+                
+                return {
+                  ...comment,
+                  profiles: profile || undefined
+                };
+              }
+              return comment;
+            })
+          );
+
+          return {
+            ...answer,
+            profiles: answerProfile,
+            comentarios: commentsWithProfiles
+          };
+        })
+      );
+      
+      return answersWithProfiles as Answer[];
     },
     enabled: !!questionId,
   });
