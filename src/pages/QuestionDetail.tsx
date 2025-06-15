@@ -6,6 +6,17 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuestion, useAnswers, useCreateAnswer, useCreateComment } from '@/hooks/useQuestions';
 import { useToast } from '@/hooks/use-toast';
@@ -17,7 +28,13 @@ import {
   Award, 
   Heart,
   Star,
-  Send
+  Send,
+  Edit,
+  Trash2,
+  Flag,
+  FileText,
+  ExternalLink,
+  Image
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -39,6 +56,105 @@ export default function QuestionDetail() {
 
   // Verificar se o usuário é o autor da pergunta
   const isQuestionAuthor = user && question && user.id === question.user_id;
+
+  const handleDeleteQuestion = () => {
+    toast({
+      title: "Funcionalidade em desenvolvimento",
+      description: "A exclusão de perguntas será implementada em breve.",
+    });
+  };
+
+  const handleEditQuestion = () => {
+    toast({
+      title: "Funcionalidade em desenvolvimento", 
+      description: "A edição de perguntas será implementada em breve.",
+    });
+  };
+
+  const handleReportQuestion = () => {
+    toast({
+      title: "Funcionalidade em desenvolvimento",
+      description: "O sistema de denúncias será implementado em breve.",
+    });
+  };
+
+  const renderAttachments = (anexos: any[]) => {
+    if (!anexos || anexos.length === 0) return null;
+
+    return (
+      <div className="mt-4 space-y-3">
+        <h4 className="text-sm font-medium text-gray-700">Anexos:</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {anexos.map((anexo, index) => {
+            const isImage = anexo.tipo?.startsWith('image/') || anexo.url?.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+            
+            return (
+              <div key={index} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                <div className="flex items-center gap-3">
+                  {isImage ? (
+                    <Image className="h-5 w-5 text-blue-600" />
+                  ) : (
+                    <FileText className="h-5 w-5 text-gray-600" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">
+                      {anexo.nome || `Anexo ${index + 1}`}
+                    </p>
+                    {anexo.tamanho && (
+                      <p className="text-xs text-gray-500">
+                        {(anexo.tamanho / 1024).toFixed(1)} KB
+                      </p>
+                    )}
+                  </div>
+                  {anexo.url && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => window.open(anexo.url, '_blank')}
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+                {isImage && anexo.url && (
+                  <div className="mt-2">
+                    <img 
+                      src={anexo.url} 
+                      alt={anexo.nome || 'Anexo'} 
+                      className="max-w-full h-auto rounded border"
+                      style={{ maxHeight: '200px' }}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  const getUserTypeLabel = (userType: string) => {
+    switch (userType) {
+      case 'student': return 'Estudante';
+      case 'teacher': return 'Professor';
+      case 'admin': return 'Administrador';
+      default: return 'Usuário';
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'ativa':
+        return <Badge className="bg-green-100 text-green-800 border-green-200">Ativa</Badge>;
+      case 'resolvida':
+        return <Badge className="bg-blue-100 text-blue-800 border-blue-200">Resolvida</Badge>;
+      case 'fechada':
+        return <Badge className="bg-gray-100 text-gray-800 border-gray-200">Fechada</Badge>;
+      default:
+        return <Badge className="bg-gray-100 text-gray-800 border-gray-200">{status}</Badge>;
+    }
+  };
 
   if (questionLoading) {
     return (
@@ -143,13 +259,15 @@ export default function QuestionDetail() {
           {/* Pergunta Principal */}
           <Card className="mb-8 shadow-sm border border-gray-200">
             <CardContent className="p-8">
-              <div className="flex items-center gap-3 mb-4">
+              {/* Status e informações básicas */}
+              <div className="flex items-center gap-3 mb-4 flex-wrap">
                 <Badge className="bg-blue-100 text-blue-800 border-blue-200">
                   {question.materias?.nome || 'Geral'}
                 </Badge>
                 <Badge className="bg-green-100 text-green-700">
                   +{question.pontos} pontos
                 </Badge>
+                {getStatusBadge(question.status)}
                 <div className="flex items-center gap-1 text-sm text-gray-500 ml-auto">
                   <Clock className="h-4 w-4" />
                   {formatDistanceToNow(new Date(question.created_at), { 
@@ -159,31 +277,96 @@ export default function QuestionDetail() {
                 </div>
               </div>
 
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+              {/* Título da pergunta */}
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
                 {question.titulo}
               </h1>
 
+              {/* Conteúdo da pergunta */}
               <div className="prose prose-gray max-w-none mb-6">
                 <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
                   {question.conteudo}
                 </p>
               </div>
 
-              {/* Autor da pergunta */}
-              <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+              {/* Anexos */}
+              {renderAttachments(question.anexos || [])}
+
+              {/* Informações do autor e botões de ação */}
+              <div className="flex items-center justify-between pt-6 border-t border-gray-100">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-daft-500 to-blue-500 rounded-full flex items-center justify-center">
-                    <User className="h-5 w-5 text-white" />
+                  <div className="w-12 h-12 bg-gradient-to-br from-daft-500 to-blue-500 rounded-full flex items-center justify-center">
+                    <User className="h-6 w-6 text-white" />
                   </div>
                   <div>
                     <p className="font-medium text-gray-900">
                       {question.profiles?.name || question.profiles?.username || 'Usuário'}
                     </p>
-                    <p className="text-sm text-gray-500">Autor da pergunta</p>
+                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                      <span>Autor da pergunta</span>
+                      {question.profiles && (
+                        <>
+                          <span>•</span>
+                          <span>{getUserTypeLabel((question.profiles as any)?.user_type || 'student')}</span>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  {/* Botões para o autor da pergunta */}
+                  {isQuestionAuthor && (
+                    <>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={handleEditQuestion}
+                      >
+                        <Edit className="h-4 w-4 mr-1" />
+                        Editar Pergunta
+                      </Button>
+                      
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+                            <Trash2 className="h-4 w-4 mr-1" />
+                            Excluir Pergunta
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Excluir pergunta?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Esta ação não pode ser desfeita. A pergunta e todas as respostas serão permanentemente removidas.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction 
+                              onClick={handleDeleteQuestion}
+                              className="bg-red-600 hover:bg-red-700"
+                            >
+                              Excluir
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </>
+                  )}
+                  
+                  {/* Botão reportar para usuários logados */}
+                  {user && !isQuestionAuthor && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={handleReportQuestion}
+                    >
+                      <Flag className="h-4 w-4 mr-1" />
+                      Reportar
+                    </Button>
+                  )}
+                  
                   <Button variant="ghost" size="sm">
                     <Heart className="h-4 w-4 mr-1" />
                     Útil
