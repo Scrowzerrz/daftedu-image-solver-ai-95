@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
@@ -37,6 +36,9 @@ export default function QuestionDetail() {
   const { data: answers, isLoading: answersLoading } = useAnswers(id!);
   const createAnswerMutation = useCreateAnswer();
   const createCommentMutation = useCreateComment();
+
+  // Verificar se o usuário é o autor da pergunta
+  const isQuestionAuthor = user && question && user.id === question.user_id;
 
   if (questionLoading) {
     return (
@@ -90,11 +92,7 @@ export default function QuestionDetail() {
         description: "Sua resposta foi publicada!"
       });
     } catch (error) {
-      toast({
-        title: "Erro",
-        description: "Erro ao publicar resposta. Tente novamente.",
-        variant: "destructive"
-      });
+      // O erro já é tratado no hook useCreateAnswer
     }
   };
 
@@ -344,30 +342,43 @@ export default function QuestionDetail() {
 
           {/* Formulário para nova resposta */}
           {user ? (
-            <Card className="shadow-sm border border-gray-200">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Sua Resposta
-                </h3>
-                <Textarea
-                  placeholder="Escreva uma resposta detalhada para ajudar o autor da pergunta..."
-                  value={newAnswer}
-                  onChange={(e) => setNewAnswer(e.target.value)}
-                  className="mb-4"
-                  rows={6}
-                />
-                <div className="flex gap-3">
-                  <Button 
-                    onClick={handleSubmitAnswer}
-                    disabled={createAnswerMutation.isPending || !newAnswer.trim()}
-                    className="bg-gradient-to-r from-daft-600 to-blue-600 hover:from-daft-700 hover:to-blue-700"
-                  >
-                    <Send className="h-4 w-4 mr-2" />
-                    {createAnswerMutation.isPending ? 'Publicando...' : 'Publicar Resposta'}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            !isQuestionAuthor ? (
+              <Card className="shadow-sm border border-gray-200">
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Sua Resposta
+                  </h3>
+                  <Textarea
+                    placeholder="Escreva uma resposta detalhada para ajudar o autor da pergunta..."
+                    value={newAnswer}
+                    onChange={(e) => setNewAnswer(e.target.value)}
+                    className="mb-4"
+                    rows={6}
+                  />
+                  <div className="flex gap-3">
+                    <Button 
+                      onClick={handleSubmitAnswer}
+                      disabled={createAnswerMutation.isPending || !newAnswer.trim()}
+                      className="bg-gradient-to-r from-daft-600 to-blue-600 hover:from-daft-700 hover:to-blue-700"
+                    >
+                      <Send className="h-4 w-4 mr-2" />
+                      {createAnswerMutation.isPending ? 'Publicando...' : 'Publicar Resposta'}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="shadow-sm border border-gray-200">
+                <CardContent className="p-6 text-center">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    Você é o autor desta pergunta
+                  </h3>
+                  <p className="text-gray-500">
+                    Você não pode responder sua própria pergunta. Aguarde outros usuários responderem!
+                  </p>
+                </CardContent>
+              </Card>
+            )
           ) : (
             <Card className="shadow-sm border border-gray-200">
               <CardContent className="p-6 text-center">

@@ -1,7 +1,7 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 
 export interface Question {
   id: string;
@@ -209,10 +209,24 @@ export const useAnswers = (questionId: string) => {
 export const useCreateAnswer = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: async ({ questionId, content }: { questionId: string; content: string }) => {
       if (!user) throw new Error('Usuário não autenticado');
+
+      // Verificar se o usuário não é o autor da pergunta
+      const { data: question, error: questionError } = await supabase
+        .from('perguntas')
+        .select('user_id')
+        .eq('id', questionId)
+        .single();
+
+      if (questionError) throw questionError;
+
+      if (question.user_id === user.id) {
+        throw new Error('Você não pode responder sua própria pergunta');
+      }
 
       const { data, error } = await supabase
         .from('respostas')
@@ -229,6 +243,13 @@ export const useCreateAnswer = () => {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['answers', variables.questionId] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Erro",
+        description: error.message || "Erro ao publicar resposta. Tente novamente.",
+        variant: "destructive"
+      });
     },
   });
 };
