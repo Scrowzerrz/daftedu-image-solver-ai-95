@@ -12,14 +12,16 @@ import { Footer } from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
-  const { user, loading } = useAuth();
+  const { user, session, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && user) {
+    // Only redirect if we're sure the user is authenticated and not loading
+    if (!loading && (user || session)) {
+      console.log('Redirecting authenticated user to dashboard');
       navigate("/dashboard");
     }
-  }, [user, loading, navigate]);
+  }, [user, session, loading, navigate]);
 
   if (loading) {
     return (
@@ -32,7 +34,8 @@ const Index = () => {
     );
   }
 
-  if (user) {
+  // Only show landing page if user is definitely not authenticated
+  if (user || session) {
     return null; // Will redirect to dashboard
   }
 
